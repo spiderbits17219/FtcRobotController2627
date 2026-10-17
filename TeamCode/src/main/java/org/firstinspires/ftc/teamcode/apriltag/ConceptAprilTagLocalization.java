@@ -154,25 +154,29 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
             if (gamepad1.a) {
                 List<AprilTagDetection> currentDetections = aprilTag.getDetections();
                 for (AprilTagDetection detection : currentDetections) {
-                    if (detection.metadata != null) {
-                        // 1. Calculate errors
-                        double rangeError = detection.ftcPose.range - 12.0; // Target distance: 12 inches
-                        double headingError = detection.ftcPose.bearing;     // Target bearing: 0 (centered)
-                        double yawError = detection.ftcPose.yaw;           // Target yaw: 0 (squared up)
+                    if (detection instanceof AprilTagSingleDetection) {
+                        AprilTagSingleDetection singleDet = (AprilTagSingleDetection) detection;
 
-                        // 2. Proportional motor power adjustments
-                        double drivePower = rangeError * 0.05;
-                        double steerPower = headingError * 0.02;
-                        double yawPower = yawError * 0.02;
+                        if (singleDet.metadata != null) {
+                            // 1. Calculate errors
+                            double rangeError = singleDet.ftcPose.range - 12.0; // Target distance: 12 inches
+                            double headingError = singleDet.ftcPose.bearing;     // Target bearing: 0 (centered)
+                            double yawError = singleDet.ftcPose.yaw;           // Target yaw: 0 (squared up)
 
-                        // 3. Apply to motors (uncomment and replace with your actual motor names)
-                        /*
-                        frontLeftMotor.setPower(drivePower - steerPower - yawPower);
-                        frontRightMotor.setPower(drivePower + steerPower + yawPower);
-                        backLeftMotor.setPower(drivePower - steerPower - yawPower);
-                        backRightMotor.setPower(drivePower + steerPower + yawPower);
-                        */
-                        break;
+                            // 2. Proportional motor power adjustments
+                            double drivePower = rangeError * 0.05;
+                            double steerPower = headingError * 0.02;
+                            double yawPower = yawError * 0.02;
+
+                            // 3. Apply to motors (uncomment and replace with your actual motor names)
+                            /*
+                            frontLeftMotor.setPower(drivePower - steerPower - yawPower);
+                            frontRightMotor.setPower(drivePower + steerPower + yawPower);
+                            backLeftMotor.setPower(drivePower - steerPower - yawPower);
+                            backRightMotor.setPower(drivePower + steerPower + yawPower);
+                            */
+                            break;
+                        }
                     }
                 }
             }
@@ -300,8 +304,3 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
 
         // Add "key" information to telemetry
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-
-    }   // end method telemetryAprilTag()
-
-}   // end class
