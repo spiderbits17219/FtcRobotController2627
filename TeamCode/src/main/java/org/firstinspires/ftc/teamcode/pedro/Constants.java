@@ -121,25 +121,44 @@ public class Constants {
             }
     );
 
-    public static ThreeWheelIMUConfig localizerConfig = new ThreeWheelIMUConfig(c -> {
-        c.leftEncoderName.set("lf");
-        c.rightEncoderName.set("rr");
-        c.strafeEncoderName.set("lr");
-        c.imuName.set("imu");
-        c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-        )));
-        c.leftPodY.set(-7519.237487506844);
-        c.rightPodY.set(4142.457077369497);
-        c.strafePodX.set(0.0);
-        c.forwardTicksToInches.set(3.064260118218732);
-        c.strafeTicksToInches.set(0.39718492086455987);
-        c.turnTicksToRadians.set(2.889411567760764);
-        c.leftEncoderDirection.set(Encoder.REVERSE);
-        c.rightEncoderDirection.set(Encoder.FORWARD);
-        c.strafeEncoderDirection.set(Encoder.REVERSE);
-    });
+//    public static ThreeWheelIMUConfig localizerConfig = new ThreeWheelIMUConfig(c -> {
+//        c.leftEncoderName.set("lf");
+//        c.rightEncoderName.set("rr");
+//        c.strafeEncoderName.set("lr");
+//        c.imuName.set("imu");
+//        c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(
+//                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+//        )));
+//        c.leftPodY.set(-7519.237487506844);
+//        c.rightPodY.set(4142.457077369497);
+//        c.strafePodX.set(0.0);
+//        c.forwardTicksToInches.set(3.064260118218732);
+//        c.strafeTicksToInches.set(0.39718492086455987);
+//        c.turnTicksToRadians.set(2.889411567760764);
+//        c.leftEncoderDirection.set(Encoder.REVERSE);
+//        c.rightEncoderDirection.set(Encoder.FORWARD);
+//        c.strafeEncoderDirection.set(Encoder.REVERSE);
+//    });
+public static ThreeWheelIMUConfig localizerConfig = new ThreeWheelIMUConfig(c -> {
+    c.leftEncoderName.set("lf");
+    c.rightEncoderName.set("rr");
+    c.strafeEncoderName.set("lr");
+    c.imuName.set("imu");
+    c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(
+            RevHubOrientationOnRobot.LogoFacingDirection.UP,
+            RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+    )));
+    c.leftPodY.set(326.00855980331147);
+    c.rightPodY.set(228.39683010258213);
+    c.strafePodX.set(0.0);
+    c.forwardTicksToInches.set(0.12756085396506076);
+    c.strafeTicksToInches.set(0.17698719022908124);
+    c.turnTicksToRadians.set(0.2742900652343516);
+    c.leftEncoderDirection.set(Encoder.REVERSE);
+    c.rightEncoderDirection.set(Encoder.REVERSE);
+    c.strafeEncoderDirection.set(Encoder.REVERSE);
+});
 
     public static ForesightConfig foresightConfig = new ForesightConfig(
             c -> {
