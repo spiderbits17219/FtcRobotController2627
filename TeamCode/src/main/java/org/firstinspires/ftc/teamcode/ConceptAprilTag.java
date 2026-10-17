@@ -131,7 +131,6 @@ public class ConceptAprilTag extends LinearOpMode {
                 visionPortal.resumeStreaming();
             }
 
-            // Share the CPU.
             sleep(20);
         }
 
