@@ -32,6 +32,7 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor; // Added for motor support if needed
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCompatibilityManager;
@@ -150,6 +151,55 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
 
             telemetryAprilTag();
 
+            // ==========================================
+            // AUTO-ALIGNMENT LOGIC ADDED HERE
+            // ==========================================
+            if (gamepad1.a) { // Hold 'A' on Gamepad 1 to activate auto-alignment
+                boolean tagFound = false;
+                List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+
+                for (AprilTagDetection detection : currentDetections) {
+                    if (detection.metadata != null) {
+                        tagFound = true;
+
+                        // 1. Calculate errors based on desired offset from the tag
+                        // Desired: 12 inches away, centered horizontally (bearing 0), and squared up (yaw 0)
+                        double rangeError = detection.ftcPose.range - 12.0;
+                        double headingError = detection.ftcPose.bearing;
+                        double yawError = detection.ftcPose.yaw;
+
+                        // 2. Compute proportional motor power adjustments
+                        double drivePower = rangeError * 0.05;   // Forward/Backward speed
+                        double steerPower = headingError * 0.02; // Turning to center on tag
+                        double yawPower = yawError * 0.02;       // Squaring up parallel to tag
+
+                        // 3. Apply power to your robot drive motors here:
+                        // (Uncomment and replace with your actual motor variable names)
+                        /*
+                        double leftPower  = drivePower - steerPower - yawPower;
+                        double rightPower = drivePower + steerPower + yawPower;
+                        frontLeftMotor.setPower(leftPower);
+                        frontRightMotor.setPower(rightPower);
+                        backLeftMotor.setPower(leftPower);
+                        backRightMotor.setPower(rightPower);
+                        */
+
+                        break; // Stop checking after finding the first valid tag
+                    }
+                }
+
+                if (!tagFound) {
+                    // Stop motors or hold position if no tag is seen
+                    /*
+                    frontLeftMotor.setPower(0);
+                    frontRightMotor.setPower(0);
+                    backLeftMotor.setPower(0);
+                    backRightMotor.setPower(0);
+                    */
+                }
+            }
+            // ==========================================
+
             // Push telemetry to the Driver Station.
             telemetry.update();
 
@@ -219,13 +269,8 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         //builder.enableLiveView(true);
 
-        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
+        // Stream format configuration...
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
-
-        // Choose whether or not LiveView stops if no processors are enabled.
-        // If set "true", monitor shows solid orange screen if no processors enabled.
-        // If set "false", monitor shows camera view without annotations.
-        //builder.setAutoStopLiveView(false);
 
         // Set and enable the processor.
         builder.addProcessor(aprilTag);
@@ -233,11 +278,8 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
 
-        // Project the webcam feed to the Driver Hub (Driver Station) Camera Stream
+        // Project the webcam feed to the Driver Hub Camera Stream
         CameraStreamServer.getInstance().setSource(visionPortal);
-
-        // Disable or re-enable the aprilTag processor at any time.
-        //visionPortal.setProcessorEnabled(aprilTag, true);
 
     }   // end method initAprilTag()
 
