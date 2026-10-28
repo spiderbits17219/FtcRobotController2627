@@ -40,7 +40,7 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
     private DcMotor rrDrive = null;  //  Right back drive wheel
 
     private final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private final int DESIRED_TAG_ID = 34;    // The tag you want to approach, or set to -1 for ANY tag.
+    private final int DESIRED_TAG_ID = -1;    // The tag you want to approach, or set to -1 for ANY tag.
     private final String DESIRED_CLUSTER_NAME = null; // The cluster name you want to approach
 
     private VisionPortal visionPortal;
