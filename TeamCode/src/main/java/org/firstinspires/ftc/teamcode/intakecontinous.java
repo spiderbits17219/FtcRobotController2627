@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "intake continous", group = "Linear OpMode")
 public class intakecontinous extends LinearOpMode {
-
-    // Declare the motor object
-    private DcMotor myMotor;
+        private DcMotor myMotor;
 
     @Override
     public void runOpMode() {
