@@ -125,6 +125,11 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
                 }
             }
 
+            // Calculate errors continuously if a target is found so they update live on telemetry
+            double rangeError   = targetFound ? (targetRange - DESIRED_DISTANCE) : 0;
+            double headingError = targetFound ? targetBearing : 0;
+            double yawError     = targetFound ? targetYaw : 0;
+
             // Tell the driver what we see
             if (targetFound) {
                 telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
@@ -132,17 +137,16 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
                 telemetry.addData("Range",  "%5.1f inches", targetRange);
                 telemetry.addData("Bearing","%3.0f degrees", targetBearing);
                 telemetry.addData("Yaw","%3.0f degrees", targetYaw);
+                // Added live tracking values/errors:
+                telemetry.addData("Range Error", "%5.1f inches", rangeError);
+                telemetry.addData("Heading Error", "%3.0f degrees", headingError);
+                telemetry.addData("Yaw Error", "%3.0f degrees", yawError);
             } else {
                 telemetry.addData("\n>","Drive using joysticks to find valid target\n");
             }
 
             // If Left Bumper is pressed AND we found a target, Drive Automatically
             if (gamepad1.left_bumper && targetFound) {
-
-                // FIXED: rangeError calculation is now properly on a single line with subtraction
-                double  rangeError      = targetRange - DESIRED_DISTANCE;
-                double  headingError    = targetBearing;
-                double  yawError        = targetYaw;
 
                 // Calculate movement powers using gains
                 drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
