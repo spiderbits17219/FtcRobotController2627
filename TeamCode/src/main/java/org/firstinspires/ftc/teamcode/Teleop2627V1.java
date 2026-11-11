@@ -31,7 +31,7 @@ public class Teleop2627V1 extends LinearOpMode {
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN   = 0.3;
 
-    private DcMotorEx lfDrive = null;
+    private DcMotorEx lfDrive = null ;
     private DcMotorEx rfDrive = null;
     private DcMotorEx lrDrive = null;
     private DcMotorEx rrDrive = null;
