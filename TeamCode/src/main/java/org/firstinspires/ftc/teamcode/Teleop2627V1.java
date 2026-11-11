@@ -131,6 +131,7 @@ public class Teleop2627V1 extends LinearOpMode {
 
             moveRobot(drive, strafe, turn);
 
+
             if (gamepad2.a) {
                 intakeMotor.setPower(1.0);
             } else if (gamepad2.b) {
