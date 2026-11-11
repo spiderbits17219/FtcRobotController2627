@@ -26,7 +26,6 @@ public class Teleop2627V1 extends LinearOpMode {
     final double SPEED_GAIN  = 0.02;
     final double STRAFE_GAIN = 0.015;
     final double TURN_GAIN   = 0.01;
-
     final double MAX_AUTO_SPEED  = 0.5;
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN   = 0.3;
@@ -37,8 +36,8 @@ public class Teleop2627V1 extends LinearOpMode {
     private DcMotorEx rrDrive = null;
 
     private DcMotorEx intakeMotor = null;
-//    private DcMotorEx shooterMotor = null;
-//    private DcMotorEx rampMotor = null;
+    private DcMotorEx shooterMotor = null;
+    private DcMotorEx transferMotor = null;
 
     private final boolean USE_WEBCAM = true;
     private final int DESIRED_TAG_ID = -1;
@@ -67,8 +66,8 @@ public class Teleop2627V1 extends LinearOpMode {
         rrDrive = hardwareMap.get(DcMotorEx.class, "rr");
 
         intakeMotor  = hardwareMap.get(DcMotorEx.class, "intake");
-//        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooter");
-//        rampMotor    = hardwareMap.get(DcMotorEx.class, "ramp");
+        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooter");
+        transferMotor = hardwareMap.get(DcMotorEx.class, "ramp transfer");
 
         lfDrive.setDirection(DcMotorEx.Direction.REVERSE);
         lrDrive.setDirection(DcMotorEx.Direction.REVERSE);
@@ -140,22 +139,21 @@ public class Teleop2627V1 extends LinearOpMode {
                 intakeMotor.setPower(0.0);
             }
 
-//            if (gamepad2.right_bumper) {
-//                shooterMotor.setPower(1.0);
-//            } else {
-//                shooterMotor.setPower(0.0);
-//            }
+            if (gamepad2.right_bumper) {
+                shooterMotor.setPower(1.0);
+            } else {
+                shooterMotor.setPower(0.0);
+            }
 
-//            if (gamepad2.x) {
-//                rampMotor.setPower(1.0);
-//            } else {
-//                rampMotor.setPower(0.0);
-//            }
+            if (gamepad2.x) {
+                transferMotor.setPower(1.0);
+            } else {
+                transferMotor.setPower(0.0);
+            }
 
-            // --- Telemetry Data Update ---
             telemetry.addData("Intake Power", intakeMotor.getPower());
-//            telemetry.addData("Shooter Power", shooterMotor.getPower());
-//            telemetry.addData("Ramp Power", rampMotor.getPower());
+            telemetry.addData("Shooter Power", shooterMotor.getPower());
+            telemetry.addData("Transfer Power", transferMotor.getPower());
             telemetry.update();
 
             sleep(10);
@@ -168,7 +166,6 @@ public class Teleop2627V1 extends LinearOpMode {
         double lrPower = x - y - yaw;
         double rrPower = x - y + yaw;
 
-        // Normalize wheel powers so none exceed 1.0 magnitude
         double max = Math.max(Math.abs(lfPower), Math.abs(rfPower));
         max = Math.max(max, Math.abs(lrPower));
         max = Math.max(max, Math.abs(rrPower));
