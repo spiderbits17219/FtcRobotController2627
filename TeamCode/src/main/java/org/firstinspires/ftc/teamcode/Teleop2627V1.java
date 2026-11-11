@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
+//import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+//import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+//import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,11 +39,11 @@ public class Teleop2627V1 extends LinearOpMode {
     private DcMotorEx shooterMotor = null;
     private DcMotorEx transferMotor = null;
 
-    private final boolean USE_WEBCAM = true;
+//    private final boolean USE_WEBCAM = true;
     private final int DESIRED_TAG_ID = -1;
 
-    private VisionPortal visionPortal;
-    private AprilTagProcessor aprilTag;
+//    private VisionPortal visionPortal;
+//    private AprilTagProcessor aprilTag;
 
     private boolean targetFound = false;
     private String targetName   = "none";
@@ -58,7 +58,7 @@ public class Teleop2627V1 extends LinearOpMode {
         double strafe = 0;
         double turn   = 0;
 
-        initAprilTag();
+//        initAprilTag();
 
         lfDrive = hardwareMap.get(DcMotorEx.class, "lf");
         rfDrive = hardwareMap.get(DcMotorEx.class, "rf");
@@ -67,16 +67,16 @@ public class Teleop2627V1 extends LinearOpMode {
 
         intakeMotor  = hardwareMap.get(DcMotorEx.class, "intake");
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooter");
-        transferMotor = hardwareMap.get(DcMotorEx.class, "ramp transfer");
+        transferMotor = hardwareMap.get(DcMotorEx.class, "transfer");
 
         lfDrive.setDirection(DcMotorEx.Direction.REVERSE);
         lrDrive.setDirection(DcMotorEx.Direction.REVERSE);
         rfDrive.setDirection(DcMotorEx.Direction.FORWARD);
         rrDrive.setDirection(DcMotorEx.Direction.FORWARD);
 
-        if (USE_WEBCAM) {
-            setManualExposure(6, 250); // Low exposure reduces motion blur for vision
-        }
+//        if (USE_WEBCAM) {
+//            setManualExposure(6, 250); // Low exposure reduces motion blur for vision
+//        }
 
         telemetryInitStatus();
 
@@ -85,24 +85,24 @@ public class Teleop2627V1 extends LinearOpMode {
         while (opModeIsActive()) {
             targetFound = false;
 
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                if (detection instanceof AprilTagSingleDetection) {
-                    AprilTagSingleDetection singleDetection = (AprilTagSingleDetection) detection;
-
-                    if (singleDetection.metadata != null) {
-                        if ((DESIRED_TAG_ID < 0) || (singleDetection.id == DESIRED_TAG_ID)) {
-                            targetName    = singleDetection.metadata.name;
-                            targetID      = singleDetection.id;
-                            targetRange   = singleDetection.ftcPose.range;
-                            targetBearing = singleDetection.ftcPose.bearing;
-                            targetYaw     = singleDetection.ftcPose.yaw;
-                            targetFound   = true;
-                            break;
-                        }
-                    }
-                }
-            }
+//            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+//            for (AprilTagDetection detection : currentDetections) {
+//                if (detection instanceof AprilTagSingleDetection) {
+//                    AprilTagSingleDetection singleDetection = (AprilTagSingleDetection) detection;
+//
+//                    if (singleDetection.metadata != null) {
+//                        if ((DESIRED_TAG_ID < 0) || (singleDetection.id == DESIRED_TAG_ID)) {
+//                            targetName    = singleDetection.metadata.name;
+//                            targetID      = singleDetection.id;
+//                            targetRange   = singleDetection.ftcPose.range;
+//                            targetBearing = singleDetection.ftcPose.bearing;
+//                            targetYaw     = singleDetection.ftcPose.yaw;
+//                            targetFound   = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
 
             double rangeError   = targetFound ? (targetRange - DESIRED_DISTANCE) : 0;
             double headingError = targetFound ? targetBearing : 0;
@@ -140,13 +140,15 @@ public class Teleop2627V1 extends LinearOpMode {
             }
 
             if (gamepad2.right_bumper) {
-                shooterMotor.setPower(1.0);
+                shooterMotor.setPower(-1.0);
             } else {
                 shooterMotor.setPower(0.0);
             }
 
             if (gamepad2.x) {
                 transferMotor.setPower(1.0);
+            } else if (gamepad2.y) {
+                transferMotor.setPower(-1.0);
             } else {
                 transferMotor.setPower(0.0);
             }
@@ -183,47 +185,47 @@ public class Teleop2627V1 extends LinearOpMode {
         rrDrive.setPower(rrPower);
     }
 
-    private void initAprilTag() {
-        aprilTag = new AprilTagProcessor.Builder().build();
-        aprilTag.setDecimation(2);
+//    private void initAprilTag() {
+//        aprilTag = new AprilTagProcessor.Builder().build();
+//        aprilTag.setDecimation(2);
+//
+//        if (USE_WEBCAM) {
+//            visionPortal = new VisionPortal.Builder()
+//                    .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
+//                    .addProcessor(aprilTag)
+//                    .build();
+//        } else {
+//            visionPortal = new VisionPortal.Builder()
+//                    .setCamera(BuiltinCameraDirection.BACK)
+//                    .addProcessor(aprilTag)
+//                    .build();
+//        }
+//    }
 
-        if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTag)
-                    .build();
-        }
-    }
-
-    private void setManualExposure(int exposureMS, int gain) {
-        if (visionPortal == null) {
-            return;
-        }
-
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-        }
-
-        if (!isStopRequested()) {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-        }
-    }
+//    private void setManualExposure(int exposureMS, int gain) {
+//        if (visionPortal == null) {
+//            return;
+//        }
+//
+//        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+//            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+//                sleep(20);
+//            }
+//        }
+//
+//        if (!isStopRequested()) {
+//            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+//            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+//                exposureControl.setMode(ExposureControl.Mode.Manual);
+//                sleep(50);
+//            }
+//            exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
+//            sleep(20);
+//            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+//            gainControl.setGain(gain);
+//            sleep(20);
+//        }
+//    }
 
     private void telemetryInitStatus() {
         telemetry.addData("Camera preview", "Check Driver Station stream");
