@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.core.text.BidiFormatter;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -29,6 +34,8 @@ public class Teleop2627V1 extends LinearOpMode {
     final double MAX_AUTO_SPEED  = 0.5;
     final double MAX_AUTO_STRAFE = 0.5;
     final double MAX_AUTO_TURN   = 0.3;
+    final double SHOOTER_TICKS_PER_REV = 28.0;
+
 
     private DcMotorEx lfDrive = null ;
     private DcMotorEx rfDrive = null;
@@ -77,6 +84,12 @@ public class Teleop2627V1 extends LinearOpMode {
 //        if (USE_WEBCAM) {
 //            setManualExposure(6, 250); // Low exposure reduces motion blur for vision
 //        }
+
+        shooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
 
         telemetryInitStatus();
 
@@ -153,10 +166,21 @@ public class Teleop2627V1 extends LinearOpMode {
             } else {
                 transferMotor.setPower(0.0);
             }
+            double shooterTicksPerSec = shooterMotor.getVelocity();
+            double shooterRpm = (shooterTicksPerSec / SHOOTER_TICKS_PER_REV) * 60.0;
+
+            double intakeTicksPerSec = intakeMotor.getVelocity();
+            double intakeRpm = (intakeTicksPerSec / SHOOTER_TICKS_PER_REV) * 60.0;
+
+            double transferTicksPerSec = transferMotor.getVelocity();
+            double transferRpm = (transferTicksPerSec / SHOOTER_TICKS_PER_REV) * 60.0;
 
             telemetry.addData("Intake Power", intakeMotor.getPower());
+            telemetry.addData("Intake RPM", intakeRpm);
             telemetry.addData("Shooter Power", shooterMotor.getPower());
+            telemetry.addData("Shooter RPM", shooterRpm);
             telemetry.addData("Transfer Power", transferMotor.getPower());
+            telemetry.addData("Transfer RPM", transferRpm);
             telemetry.update();
 
             sleep(10);
